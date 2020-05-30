@@ -1,0 +1,21 @@
+.column_layout {
+    max-width: 1350px;
+}
+.custom-header {
+    padding: 1.15rem;
+    font-size: 1.3rem;
+}
+.close {
+    content: "\2716";
+    float: right;
+    border-width: 0rem;
+    font-size: 2rem;
+    opacity: 0.6;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.close:hover {
+    opacity: 1;
+}
+.close:before{
+    content: "\2715";
+}

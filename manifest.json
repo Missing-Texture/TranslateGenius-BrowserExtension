@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+   
+    "name": "Genius Translator",
+    "version": "1.0",
+    "description": "Translate Lyrics on Genius",
+
+    "permissions": [
+      "activeTab",
+      "https://genius.com/*"
+    ],
+
+    "browser_action": {
+      "default_icon": "./icon.png",
+      "default_title": "Translate Lyrics on Genius"
+    },
+
+    "background": {
+      "scripts": ["background.js"]
+    }
+  }

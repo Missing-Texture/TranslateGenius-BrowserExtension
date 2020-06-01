@@ -7,7 +7,8 @@
 
     "permissions": [
       "activeTab",
-      "https://genius.com/*"
+      "https://genius.com/*",
+      "storage"
     ],
 
     "browser_action": {

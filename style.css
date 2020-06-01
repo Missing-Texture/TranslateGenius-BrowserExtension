@@ -1,5 +1,9 @@
-.column_layout {
+.song_body {
+    transition: max-width .5s;
+}
+.custom-length {
     max-width: 1350px;
+    transition: max-width .5s;
 }
 .custom-header {
     padding: 1.15rem;

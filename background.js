@@ -6,59 +6,38 @@ let isCsInserted = false;
 
 browser.browserAction.onClicked.addListener(handleClick);
 
+/**
+ * Send message to Content Script asking to the show Lyrics again
+ * 
+ * Throws Error if Content Script was not injeted jet
+ * injects Content Script
+ */
 function handleClick() {
-    browser.tabs.executeScript({
-        file: "./scraper.js",
+    getActiveTabs()
+    .then((tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, {showLyrics: "true"})
+        .catch((e) => {
+            // the Content Script has not been injected jet
+            browser.tabs.executeScript({
+                file: "./content.js"
+            })
+        })
     })
 }
 
 browser.runtime.onMessage.addListener(onExecuted)
 
 function onExecuted(result) {
+    /**
+     * @receives scraped Lyrics from Content Script
+     * 
+     * Translates Lyrics using the Google Translate API
+     * stitches Answer together to one String
+     * 
+     * Sends Message to Content Script containing the Translation
+     */
     if (typeof result.lyrics !== 'undefined') {
-
-        /**
-         * Send message to Content Script
-         * 
-         * Throws Error if Content Script was not injeted jet
-         * catches Error, sets isCsInserted Flag to false, calls function insertTranslationScript()
-         * 
-         * Checks if isisCsInserted Flag is true
-         * sends Message to Content Script that requests the lyrics to be shown again
-         */
-        getActiveTabs()
-        .then((tabs) => {
-            browser.tabs.sendMessage(tabs[0].id, {areYouThere: "?"})
-            .catch((e) => {
-                isCsInserted = false;
-                //console.log("cs NOT THERE -> changed cs Inserted to = " + isCsInserted)
-                insertTranslationScript(result)
-            })
-            .then(() => {
-                if (isCsInserted) {
-                    browser.tabs.sendMessage(tabs[0].id, {showLyrics: "true"})
-                }
-            })
-        })
-        
-    }
-}
-
-/**
- * Fetches Translation of Lyrics from Google Translate API
- * stitches Answer together to one String
- * 
- * Executes insertTranslation Script 
- * inserts style.css
- * sends Message to Content Script containing the translated lyrics
- * 
- * sets isCsInserted Flag to true
- * 
- * @param {string} result   scraped lyrics 
- */
-function insertTranslationScript(result) {
-    //console.log("cs Inserted? = " + isCsInserted)
-    if (!isCsInserted) {
+        console.log("recieved lyrics")
         console.log("=> MAKING API CALL")
         fetch(gtURL + encodeURI(result.lyrics))
         .then(data => {return data.json()})
@@ -69,21 +48,26 @@ function insertTranslationScript(result) {
             })
             lyrics = tmp.join(" ")
             
-            browser.tabs.executeScript({
-                file: "./insertTranslation.js",
-            })
-            .then(() => {
-                browser.tabs.insertCSS({
-                    file: "./style.css"
-                })
-                getActiveTabs()
-                .then((tabs) => browser.tabs.sendMessage(tabs[0].id, {translation: lyrics}))
-            })
+            getActiveTabs()
+            .then((tabs) => browser.tabs.sendMessage(tabs[0].id, {translation: lyrics}))
         })
-        isCsInserted = true;
+    }
+    
+    /**
+     * @receives Flag to insert CSS
+     * 
+     * insertes CSS File into Webpage
+     */
+    if (typeof result.insertCSS !== 'undefined') {
+        browser.tabs.insertCSS({
+            file: "./style.css"
+        })
     }
 }
 
+/**
+ * @returns currently active Tab 
+ */
 function getActiveTabs() {
     return browser.tabs.query({active: true, currentWindow: true})
 }

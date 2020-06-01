@@ -1,13 +1,30 @@
 let container;
 let col;
 
+// send scraped Lyrics on Init
+sendScrapedLyrics();
+
+function sendScrapedLyrics() {
+    browser.runtime.sendMessage({
+        lyrics: document.querySelector(".lyrics").innerText
+    })
+}
+
 browser.runtime.onMessage.addListener(msg => {
 
+    /**
+     * @receives translated Lyrics
+     * 
+     * Generates HTML Elements
+     *  - Header containing 'powered by ' message and Close Button
+     *  - Song Lyrics Body
+     * 
+     * Appends generated Elements to DOM
+     * adds Style Classes accordingly
+     */
     if (typeof msg.translation !== 'undefined') {
-        //console.log("Received Translation")
-        //console.log(msg)
-
         container = document.querySelector(".song_body");
+        container.className += " custom-length"
 
         col = document.createElement("div");
         col.className = "column_layout-column_span column_layout-column_span--primary"
@@ -23,6 +40,7 @@ browser.runtime.onMessage.addListener(msg => {
         removeButton.className = "square_button close"
         removeButton.onclick = function () {
             container.removeChild(col)
+            container.className = "song_body column_layout"
         }
 
         let lyrics = document.createElement("div");
@@ -34,10 +52,23 @@ browser.runtime.onMessage.addListener(msg => {
         songBody.appendChild(lyrics)
         col.appendChild(songBody)
 
-        container.insertBefore(col, container.firstChild)
+        container.insertBefore(col, container.childNodes[2])
+        browser.runtime.sendMessage({
+            insertCSS: "true"
+        })
     }
+    /**
+     * @receives F to show Lyrics again
+     * 
+     * Reinserts HTML Element into DOM
+     * adds Style Classes accordingly
+     */
     else if (typeof msg.showLyrics !== 'undefined') {
-        //console.log("reinsert Lyrics")
-        container.insertBefore(col, container.firstChild)
+        container.insertBefore(col, container.childNodes[2])
+        container.className += " custom-length"
+    }
+    else if (typeof msg.scrapeLyrics !== 'undefined') {
+        sendScrapedLyrics()
     }
 })
+

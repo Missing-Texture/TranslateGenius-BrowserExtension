@@ -1,0 +1,72 @@
+html, body {
+    width: 250px;
+    height: 250px;
+    background-color: #FFFF64;
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+}
+
+button {
+    border-color: #000;
+    color: #000;
+    transition: background-color .3s,border-color .3s;
+    background-color: transparent;
+    border-width: .15rem;
+    border-style: solid;
+    border-radius: 0;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 25px;
+    margin: auto;
+    margin-top: 20px;
+    display:block;
+    text-align: center;
+    padding: .25rem .5rem;
+    -webkit-appearance: none;
+}
+
+.header {
+    text-align: center;
+    margin: 5px;
+    letter-spacing: 5px;
+    font-size: 21px;
+}
+
+select {
+    float: right;
+    text-decoration: underline 2px;
+    transition: background-color .3s,border-color .3s;
+    background-color: transparent;
+    border-style: none;
+    display: inline-block;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: top;
+    -webkit-appearance: none;
+    background-image: url("arrow.png");
+    background-size: 12px;
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: 11px;
+    padding-right: 20px;
+    margin-right: 10px;
+}
+  
+label {
+    padding: 15px;
+}
+
+img {
+    padding-left: 20px;
+    width: 230px;
+    padding-top: 1px;
+}
+
+hr {
+    width: 90%;
+    height: 3px;
+    background-color: #000;
+    color: #000;
+    border: none;
+    opacity: .8;
+}

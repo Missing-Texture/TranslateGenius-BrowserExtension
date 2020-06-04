@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="popup.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet"> 
+  </head>
+
+<body>
+    <div id="popup-content">
+        <div class="header">Translate</div>
+        <img src="genius.png">
+
+        <hr>
+        
+        <label for="from">from</label>
+        <select name="from">
+            <option value="auto">auto detect</option>
+        </select>
+        <br>
+        <label for="to">to</label>
+        <select id="targetLang" name="to">
+            <option value="de">German</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+        </select>
+        <br>
+        <button id="translate">Translate</button>
+
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>

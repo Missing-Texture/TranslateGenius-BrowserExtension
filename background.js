@@ -1,33 +1,37 @@
 let sl = "auto" // source Language
-let tl = "de" // target Language
-let gtURL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" +sl+ "&tl=" +tl+ "&dt=t&q="
+let tl // target Language
+let gtURL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="
 
-let isCsInserted = false;
+browser.runtime.onMessage.addListener(handleMessages)
 
-browser.browserAction.onClicked.addListener(handleClick);
+function handleMessages(msg) {
+    /**
+     * @receives Flag if Popup was clicked
+     * @receives selected Target Language for Translation
+     * 
+     * Saves selected Target Language in local variable
+     * 
+     * Send message to Content Script asking to the show Lyrics again
+     * 
+     * Throws Error if Content Script was not injeted jet
+     * injects Content Script
+     */
+    if (typeof msg.popupClicked !== 'undefined') {
 
-/**
- * Send message to Content Script asking to the show Lyrics again
- * 
- * Throws Error if Content Script was not injeted jet
- * injects Content Script
- */
-function handleClick() {
-    getActiveTabs()
-    .then((tabs) => {
-        browser.tabs.sendMessage(tabs[0].id, {showLyrics: "true"})
-        .catch((e) => {
-            // the Content Script has not been injected jet
-            browser.tabs.executeScript({
-                file: "./content.js"
+        if (tl !== msg.targetLang) {
+            tl = msg.targetLang
+        }
+        getActiveTabs()
+        .then((tabs) => {
+            browser.tabs.sendMessage(tabs[0].id, {showLyrics: "true"})
+            .catch((e) => {
+                // the Content Script has not been injected jet
+                browser.tabs.executeScript({
+                    file: "./content.js"
+                })
             })
         })
-    })
-}
-
-browser.runtime.onMessage.addListener(onExecuted)
-
-function onExecuted(result) {
+    }
     /**
      * @receives scraped Lyrics from Content Script
      * 
@@ -36,10 +40,9 @@ function onExecuted(result) {
      * 
      * Sends Message to Content Script containing the Translation
      */
-    if (typeof result.lyrics !== 'undefined') {
-        console.log("recieved lyrics")
+    if (typeof msg.lyrics !== 'undefined') {
         console.log("=> MAKING API CALL")
-        fetch(gtURL + encodeURI(result.lyrics))
+        fetch(gtURL +sl+ "&tl=" +tl+ "&dt=t&q=" + encodeURI(msg.lyrics))
         .then(data => {return data.json()})
         .then(data => {
             let tmp = [];
@@ -58,7 +61,7 @@ function onExecuted(result) {
      * 
      * insertes CSS File into Webpage
      */
-    if (typeof result.insertCSS !== 'undefined') {
+    if (typeof msg.insertCSS !== 'undefined') {
         browser.tabs.insertCSS({
             file: "./style.css"
         })

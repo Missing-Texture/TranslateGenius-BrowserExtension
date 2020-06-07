@@ -1,5 +1,5 @@
-let container;
-let col;
+var container;
+var col;
 
 
 /** send scraped Lyrics on Init */
@@ -29,21 +29,21 @@ browser.runtime.onMessage.addListener(msg => {
         col = document.createElement("div")
         col.className = "column_layout-column_span column_layout-column_span--primary"
 
-        let songBody = document.createElement("div")
+        var songBody = document.createElement("div")
         songBody.className = "song_body-lyrics"
 
-        let header = document.createElement("div")
+        var header = document.createElement("div")
         header.className = "lyrics_controls custom-header"
         header.innerHTML = "<a href=\"https://translate.google.com/\">powered by Google Translate</a>"
 
-        let removeButton = document.createElement("button")
+        var removeButton = document.createElement("button")
         removeButton.className = "square_button close"
         removeButton.onclick = function () {
             container.removeChild(col)
             container.className = "song_body column_layout" // remove custom Styling
         }
 
-        let lyrics = document.createElement("div")
+        var lyrics = document.createElement("div")
         lyrics.className = "lyrics"
         lyrics.innerText = msg.translation
 

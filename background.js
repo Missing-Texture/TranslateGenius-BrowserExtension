@@ -1,6 +1,6 @@
-let sl = "auto" // source Language
-let tl // target Language
-let gtURL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="
+var sl = "auto" // source Language
+var tl // target Language
+const gtURL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="
 
 browser.runtime.onMessage.addListener(handleMessages)
 

@@ -215,32 +215,55 @@ const countryCodes = [
     "zu"
 ]
 
+document.getElementById("translate").addEventListener("click", messageBs);
+
+addSelects()
+
 /**
  * @onInit 
  * populate Select Element in Popup with predefined Language Options
+ * get Last Language used from Local Storage, mark Last Language as Selected in Select Tag
+ * if no Last Language is specified use English as default
  */
-addSelects()
 function addSelects() {
     //browser.extension.getBackgroundPage().console.log(languages.length)
     var select = document.getElementById("targetLang")
-    languages.forEach((lang,i)=> {
+    countryCodes.forEach((countryCode,i)=> {
         var option = document.createElement("option")
-        option.innerText = lang
-        option.value = countryCodes[i]
+        option.innerText = languages[i]
+        option.value = countryCode
 
-        if(lang=="German") {
-            option.setAttribute('selected', 'selected')
-        }
+        getLastLang().then(data => {
+            var lastLang = data[Object.keys(data)[0]]
+
+            if (lastLang==undefined) {
+                lastLang = "en";
+            }
+            if(countryCode==lastLang) {
+                option.setAttribute('selected', 'selected')
+            }
+        })
+       
         select.appendChild(option)
     })
 }
 
 function messageBs() {
     var select = document.getElementById("targetLang");
+    var tl = select.options[select.selectedIndex].value;
+
+    setLastLang(tl);
+
     browser.runtime.sendMessage({
         popupClicked: "true",
-        targetLang: select.options[select.selectedIndex].value
+        targetLang: tl,
     })
 }
 
-document.getElementById("translate").addEventListener("click", messageBs);
+function getLastLang() {
+    return browser.storage.local.get("lastLang")
+}
+
+function setLastLang(tl) {
+    browser.storage.local.set({"lastLang": tl})
+}

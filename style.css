@@ -1,14 +1,17 @@
 .song_body {
     transition: max-width .5s;
 }
+
 .custom-length {
     max-width: 1350px;
     transition: max-width .5s;
 }
+
 .custom-header {
     padding: 1.15rem;
     font-size: 1.3rem;
 }
+
 .close {
     content: "\2716";
     float: right;
@@ -17,9 +20,16 @@
     opacity: 0.6;
     font-family: Arial, Helvetica, sans-serif;
 }
+
 .close:hover {
     opacity: 1;
 }
+
 .close:before{
     content: "\2715";
+}
+
+.tmp {
+    overflow: auto;
+    resize: horizontal;
 }

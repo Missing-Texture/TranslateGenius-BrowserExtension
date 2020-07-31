@@ -228,7 +228,7 @@ addSelects()
 function addSelects() {
     //browser.extension.getBackgroundPage().console.log(languages.length)
     var select = document.getElementById("targetLang")
-    countryCodes.forEach((countryCode,i)=> {
+    countryCodes.forEach((countryCode, i) => {
         var option = document.createElement("option")
         option.innerText = languages[i]
         option.value = countryCode
@@ -236,14 +236,14 @@ function addSelects() {
         getLastLang().then(data => {
             var lastLang = data[Object.keys(data)[0]]
 
-            if (lastLang==undefined) {
+            if (lastLang == undefined) {
                 lastLang = "en";
             }
-            if(countryCode==lastLang) {
+            if (countryCode == lastLang) {
                 option.setAttribute('selected', 'selected')
             }
         })
-       
+
         select.appendChild(option)
     })
 }
@@ -265,5 +265,7 @@ function getLastLang() {
 }
 
 function setLastLang(tl) {
-    browser.storage.local.set({"lastLang": tl})
+    browser.storage.local.set({
+        "lastLang": tl
+    })
 }

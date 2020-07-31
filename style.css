@@ -25,7 +25,7 @@
     opacity: 1;
 }
 
-.close:before{
+.close:before {
     content: "\2715";
 }
 

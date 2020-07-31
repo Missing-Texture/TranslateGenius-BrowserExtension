@@ -64,7 +64,7 @@ browser.runtime.onMessage.addListener(msg => {
         browser.runtime.sendMessage({
             insertCSS: "true"
         })
-        
+
         /*
         .then(() => {
             console.log(document.querySelector(".lyrics").clientHeight);
@@ -100,7 +100,7 @@ browser.runtime.onMessage.addListener(msg => {
     if (typeof msg.newTranslation !== 'undefined') {
         lyrics.innerText = msg.newTranslation
 
-        if ( document.getElementById("col")==null) {
+        if (document.getElementById("col") == null) {
             container.insertBefore(col, container.childNodes[2])
             container.className += " custom-length"
         }
@@ -110,4 +110,3 @@ browser.runtime.onMessage.addListener(msg => {
         container.removeChild(col)
     }
 })
-

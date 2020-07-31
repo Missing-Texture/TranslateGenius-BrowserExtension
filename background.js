@@ -25,22 +25,25 @@ function handleMessages(msg) {
         tl = msg.targetLang
 
         getActiveTabs()
-        .then((tabs) => {
-            if (tl == lastTl) {
-                browser.tabs.sendMessage(tabs[0].id, {showLyrics: "true"})
-                .catch((e)=>
-                    // the Content Script has not been injected jet
-                    insertContentScript()
-                )
-            } 
-            else {
-                browser.tabs.sendMessage(tabs[0].id, {scrapeLyrics: "true"})
-                .catch((e)=>
-                    // the Content Script has not been injected jet
-                    insertContentScript()
-                )
-            }
-        })
+            .then((tabs) => {
+                if (tl == lastTl) {
+                    browser.tabs.sendMessage(tabs[0].id, {
+                            showLyrics: "true"
+                        })
+                        .catch((e) =>
+                            // the Content Script has not been injected jet
+                            insertContentScript()
+                        )
+                } else {
+                    browser.tabs.sendMessage(tabs[0].id, {
+                            scrapeLyrics: "true"
+                        })
+                        .catch((e) =>
+                            // the Content Script has not been injected jet
+                            insertContentScript()
+                        )
+                }
+            })
     }
 
     /**
@@ -57,29 +60,34 @@ function handleMessages(msg) {
      * set lastTranslation to curent Translation
      */
     if (typeof msg.lyrics !== 'undefined') {
-        fetch(gtURL +sl+ "&tl=" +tl+ "&dt=t&q=" + encodeURI(msg.lyrics))
-        .then(data => {return data.json()})
-        .then(data => {
-            let tmp = [];
-            data[0].forEach(e => {
-                tmp.push(e[0])
+        fetch(gtURL + sl + "&tl=" + tl + "&dt=t&q=" + encodeURI(msg.lyrics))
+            .then(data => {
+                return data.json()
             })
-            lyrics = tmp.join(" ")
-            
-            if (!lyricsWereInsertedPreviously) {
-                getActiveTabs()
-                .then((tabs) => browser.tabs.sendMessage(tabs[0].id, {translation: lyrics}))
-            }
-            else {
-                getActiveTabs()
-                .then((tabs) => browser.tabs.sendMessage(tabs[0].id, {newTranslation: lyrics}))
-            }
+            .then(data => {
+                let tmp = [];
+                data[0].forEach(e => {
+                    tmp.push(e[0])
+                })
+                lyrics = tmp.join(" ")
 
-            lyricsWereInsertedPreviously = true
-            lastTl = tl
-        })
+                if (!lyricsWereInsertedPreviously) {
+                    getActiveTabs()
+                        .then((tabs) => browser.tabs.sendMessage(tabs[0].id, {
+                            translation: lyrics
+                        }))
+                } else {
+                    getActiveTabs()
+                        .then((tabs) => browser.tabs.sendMessage(tabs[0].id, {
+                            newTranslation: lyrics
+                        }))
+                }
+
+                lyricsWereInsertedPreviously = true
+                lastTl = tl
+            })
     }
-    
+
     /**
      * @receives Flag to insert CSS
      * 
@@ -96,7 +104,10 @@ function handleMessages(msg) {
  * @returns currently active Tab 
  */
 function getActiveTabs() {
-    return browser.tabs.query({active: true, currentWindow: true})
+    return browser.tabs.query({
+        active: true,
+        currentWindow: true
+    })
 }
 
 function insertContentScript() {
